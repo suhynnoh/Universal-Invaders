@@ -170,6 +170,7 @@ pip-log.txt
 *.iml
 .idea
 .gitmessage.txt
+out
 
 # Default
 log*
