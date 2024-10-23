@@ -166,6 +166,12 @@ pip-log.txt
 ## Custom
 #############
 
+# My custom
+*.iml
+.idea
+.gitmessage.txt
+
+# Default
 log*
 *.ttf
 .checkstyle
