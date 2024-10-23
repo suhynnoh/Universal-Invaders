@@ -164,7 +164,7 @@ public class GameScreen extends Screen {
 				boolean isLeftBorder = this.ship.getPositionX()
 						- this.ship.getSpeed() < 1;
 				boolean isTopBorder = this.ship.getPositionY()
-						- this.ship.getSpeed() < 1;
+						- this.ship.getSpeed() < 1 + SEPARATION_LINE_HEIGHT;
 				boolean isBottomBorder = this.ship.getPositionY()
 						+ this.ship.getHeight() + this.ship.getSpeed() > this.height - 1;
 
