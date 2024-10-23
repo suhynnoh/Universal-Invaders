@@ -154,10 +154,18 @@ public class GameScreen extends Screen {
 						|| inputManager.isKeyDown(KeyEvent.VK_D);
 				boolean moveLeft = inputManager.isKeyDown(KeyEvent.VK_LEFT)
 						|| inputManager.isKeyDown(KeyEvent.VK_A);
+				boolean moveUp = inputManager.isKeyDown(KeyEvent.VK_UP)
+						|| inputManager.isKeyDown(KeyEvent.VK_W);
+				boolean moveDown = inputManager.isKeyDown(KeyEvent.VK_DOWN)
+						|| inputManager.isKeyDown(KeyEvent.VK_S);
 
 				boolean isRightBorder = this.ship.getPositionX()
 						+ this.ship.getWidth() + this.ship.getSpeed() > this.width - 1;
 				boolean isLeftBorder = this.ship.getPositionX()
+						- this.ship.getSpeed() < 1;
+				boolean isTopBorder = this.ship.getPositionY()
+						+ this.ship.getHeight() + this.ship.getSpeed() > this.height - 1;
+				boolean isBottomBorder = this.ship.getPositionY()
 						- this.ship.getSpeed() < 1;
 
 				if (moveRight && !isRightBorder) {
@@ -165,6 +173,12 @@ public class GameScreen extends Screen {
 				}
 				if (moveLeft && !isLeftBorder) {
 					this.ship.moveLeft();
+				}
+				if (moveUp && !isTopBorder) {
+					this.ship.moveUp();
+				}
+				if (moveDown && !isBottomBorder) {
+					this.ship.moveDown();
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
 					if (this.ship.shoot(this.bullets))
