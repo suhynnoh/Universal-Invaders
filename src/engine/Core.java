@@ -32,7 +32,7 @@ public final class Core {
 	/** Max lives. */
 	private static final int MAX_LIVES = 3;
 	/** Levels between extra life. */
-	private static final int EXTRA_LIFE_FRECUENCY = 3;
+	private static final int EXTRA_LIFE_FREQUENCY = 3;
 	/** Total number of levels. */
 	private static final int NUM_LEVELS = 7;
 	
@@ -132,7 +132,7 @@ public final class Core {
 				do {
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
-							% EXTRA_LIFE_FRECUENCY == 0
+							% EXTRA_LIFE_FREQUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
 					
 					currentScreen = new GameScreen(gameState,
