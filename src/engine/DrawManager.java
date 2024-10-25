@@ -541,6 +541,10 @@ public final class DrawManager {
 		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
 				rectWidth, rectHeight);
 		backBufferGraphics.setColor(Color.GREEN);
+		drawHorizontalLine(screen, screen.getHeight() / 2 - screen.getHeight()
+				/ 12);
+		drawHorizontalLine(screen, screen.getHeight() / 2 + screen.getHeight()
+				/ 12);
 		if (number >= 4)
 			if (!bonusLife) {
 				drawCenteredBigString(screen, "Level " + level,
