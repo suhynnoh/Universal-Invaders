@@ -39,6 +39,8 @@ public class ScoreScreen extends Screen {
 	private List<Score> highScores;
 	/** Checks if current score is a new high score. */
 	private boolean isNewRecord;
+	/** Checks if the game was cleared. */
+	private boolean isGameClear;
 	/** Player name for record input. */
 	private char[] name;
 	/** Character of players name selected for change. */
@@ -67,6 +69,7 @@ public class ScoreScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.isNewRecord = false;
+		this.isGameClear = false;
 		this.name = "AAA".toCharArray();
 		this.nameCharSelected = 0;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
@@ -82,6 +85,8 @@ public class ScoreScreen extends Screen {
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
 		}
+
+		if (gameState.getLivesRemaining() > 0) isGameClear = true;
 	}
 
 	/**
@@ -169,8 +174,8 @@ public class ScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
-				this.isNewRecord);
+		drawManager.drawGameEnd(this, this.inputDelay.checkFinished(),
+				this.isNewRecord, this.isGameClear);
 		drawManager.drawResults(this, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.shipsDestroyed
 						/ this.bulletsShot, this.isNewRecord);
