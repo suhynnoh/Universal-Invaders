@@ -283,8 +283,8 @@ public class GameScreen extends Screen {
 		for (Bullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-					recyclable.add(bullet);
 					if (!this.ship.isDestroyed()) {
+						recyclable.add(bullet);
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
