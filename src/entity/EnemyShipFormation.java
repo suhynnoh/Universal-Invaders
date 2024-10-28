@@ -94,6 +94,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private List<EnemyShip> shooters;
 	/** Number of not destroyed ships. */
 	private int shipCount;
+	private Entity ship;
 
 	/** Directions the formation can move. */
 	private enum Direction {
@@ -111,7 +112,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * @param gameSettings
 	 *            Current game settings.
 	 */
-	public EnemyShipFormation(final GameSettings gameSettings) {
+	public EnemyShipFormation(final GameSettings gameSettings, Entity ship) {
 		this.drawManager = Core.getDrawManager();
 		this.logger = Core.getLogger();
 		this.enemyShips = new ArrayList<List<EnemyShip>>();
@@ -128,6 +129,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.positionY = INIT_POS_Y;
 		this.shooters = new ArrayList<EnemyShip>();
 		SpriteType spriteType;
+		this.ship = ship;
 
 		this.logger.info("Initializing " + nShipsWide + "x" + nShipsHigh
 				+ " ship formation in (" + positionX + "," + positionY + ")");
@@ -209,51 +211,20 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		movementInterval++;
 		if (movementInterval >= this.movementSpeed) {
 			movementInterval = 0;
+			// EnemyShipFormation 이 Ship 을 따라가도록 설정
+			if (ship != null) {
+				if (ship.getPositionX() > this.positionX) {
+					movementX = X_SPEED;
+				} else if (ship.getPositionX() < this.positionX) {
+					movementX = -X_SPEED;
+				}
 
-			boolean isAtBottom = positionY
-					+ this.height > screen.getHeight() - BOTTOM_MARGIN;
-			boolean isAtRightSide = positionX
-					+ this.width >= screen.getWidth() - SIDE_MARGIN;
-			boolean isAtLeftSide = positionX <= SIDE_MARGIN;
-			boolean isAtHorizontalAltitude = positionY % DESCENT_DISTANCE == 0;
-
-			if (currentDirection == Direction.DOWN) {
-				if (isAtHorizontalAltitude)
-					if (previousDirection == Direction.RIGHT) {
-						currentDirection = Direction.LEFT;
-						this.logger.info("Formation now moving left 1");
-					} else {
-						currentDirection = Direction.RIGHT;
-						this.logger.info("Formation now moving right 2");
-					}
-			} else if (currentDirection == Direction.LEFT) {
-				if (isAtLeftSide)
-					if (!isAtBottom) {
-						previousDirection = currentDirection;
-						currentDirection = Direction.DOWN;
-						this.logger.info("Formation now moving down 3");
-					} else {
-						currentDirection = Direction.RIGHT;
-						this.logger.info("Formation now moving right 4");
-					}
-			} else {
-				if (isAtRightSide)
-					if (!isAtBottom) {
-						previousDirection = currentDirection;
-						currentDirection = Direction.DOWN;
-						this.logger.info("Formation now moving down 5");
-					} else {
-						currentDirection = Direction.LEFT;
-						this.logger.info("Formation now moving left 6");
-					}
+				if (ship.getPositionY() > this.positionY) {
+					movementY = Y_SPEED;
+				} else if (ship.getPositionY() < this.positionY) {
+					movementY = -Y_SPEED;
+				}
 			}
-
-			if (currentDirection == Direction.RIGHT)
-				movementX = X_SPEED;
-			else if (currentDirection == Direction.LEFT)
-				movementX = -X_SPEED;
-			else
-				movementY = Y_SPEED;
 
 			positionX += movementX;
 			positionY += movementY;
@@ -320,8 +291,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.width = rightMostPoint - leftMostPoint + this.shipWidth;
 		this.height = maxColumn;
 
-		this.positionX = leftMostPoint;
-		this.positionY = minPositionY;
+		this.positionX = leftMostPoint + (width / 2);
+		this.positionY = minPositionY + (height / 2);
 	}
 
 	/**
