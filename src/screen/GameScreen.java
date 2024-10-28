@@ -312,7 +312,19 @@ public class GameScreen extends Screen {
 			}
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
+		for (EnemyShip enemyShip : this.enemyShipFormation) {
+			if (checkCollision(this.ship, enemyShip)) {
+				if (!this.ship.isDestroyed() && !enemyShip.isDestroyed()) {
+					this.enemyShipFormation.destroy(enemyShip);
+					this.ship.destroy();
+					this.lives--;
+					this.logger.info("Hit on player ship, " + this.lives
+							+ " lives remaining.");
+				}
+			}
+		}
 	}
+
 
 	/**
 	 * Checks if two entities are colliding.
