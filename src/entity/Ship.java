@@ -124,4 +124,22 @@ public class Ship extends Entity {
 	public final int getSpeed() {
 		return SPEED;
 	}
+
+	/**
+	 * Getter for the ship's X position.
+	 *
+	 * @return The X coordinate of the ship.
+	 */
+	public int getX() {
+		return this.positionX;
+	}
+
+	/**
+	 * Getter for the ship's Y position.
+	 *
+	 * @return The Y coordinate of the ship.
+	 */
+	public int getY() {
+		return this.positionY;
+	}
 }
