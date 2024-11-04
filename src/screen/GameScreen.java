@@ -70,10 +70,12 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
-	/** level 이 시작된 실제 시간 */
-	private long levelStartTime;
+	/** level 경과 시간 */
+	private int levelTime;
 	/** level 이 시작 되었는지 여부 */
 	private boolean levelStarted;
+	/** 1초를 새는 Cooldown */
+	private Cooldown clockCooldown;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -132,6 +134,9 @@ public class GameScreen extends Screen {
 
 		// GameScreen 이 시작될 땐 카운트 다운이 시작되므로
 		this.levelStarted = false;
+		this.levelTime = 0;
+		this.clockCooldown = Core.getCooldown(1000);
+		this.clockCooldown.reset();
 	}
 
 	/**
@@ -154,9 +159,9 @@ public class GameScreen extends Screen {
 	protected final void update() {
 		super.update();
 
-		// Check if the input delay has finished and the level hasn't started yet
+		// level 이 처음 시작될 때 clockCooldown reset
 		if (this.inputDelay.checkFinished() && !this.levelStarted) {
-			this.levelStartTime = System.currentTimeMillis();
+			this.clockCooldown.reset();
 			this.levelStarted = true;
 		}
 
@@ -220,6 +225,12 @@ public class GameScreen extends Screen {
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
+
+			// 1초마다 levelTime 1씩 증가
+			if (this.clockCooldown.checkFinished()) {
+				this.levelTime += 1;
+				this.clockCooldown.reset();
+			}
 		}
 
 		manageCollisions();
@@ -270,11 +281,8 @@ public class GameScreen extends Screen {
 					this.bonusLife);
 		}
 
-		// Display elapsed time since the level started
-		if (this.levelStarted) {
-			int elapsedTime = (int) ((System.currentTimeMillis() - this.levelStartTime) / 1000);
-			drawManager.drawTime(this, elapsedTime);
-		}
+		// 현재 levelTime 그리기
+		drawManager.drawTime(this, levelTime);
 
 		drawManager.completeDrawing(this);
 	}
