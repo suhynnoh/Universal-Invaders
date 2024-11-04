@@ -70,6 +70,10 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
+	/** level 이 시작된 실제 시간 */
+	private long levelStartTime;
+	/** level 이 시작 되었는지 여부 */
+	private boolean levelStarted;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -125,6 +129,9 @@ public class GameScreen extends Screen {
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
+
+		// GameScreen 이 시작될 땐 카운트 다운이 시작되므로
+		this.levelStarted = false;
 	}
 
 	/**
@@ -146,6 +153,12 @@ public class GameScreen extends Screen {
 	 */
 	protected final void update() {
 		super.update();
+
+		// Check if the input delay has finished and the level hasn't started yet
+		if (this.inputDelay.checkFinished() && !this.levelStarted) {
+			this.levelStartTime = System.currentTimeMillis();
+			this.levelStarted = true;
+		}
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
 
@@ -255,6 +268,12 @@ public class GameScreen extends Screen {
 							- this.gameStartTime)) / 1000);
 			drawManager.drawCountDown(this, this.level, countdown,
 					this.bonusLife);
+		}
+
+		// Display elapsed time since the level started
+		if (this.levelStarted) {
+			int elapsedTime = (int) ((System.currentTimeMillis() - this.levelStartTime) / 1000);
+			drawManager.drawTime(this, elapsedTime);
 		}
 
 		drawManager.completeDrawing(this);

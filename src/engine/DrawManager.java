@@ -563,4 +563,23 @@ public final class DrawManager {
 			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 					+ fontBigMetrics.getHeight() / 3);
 	}
+
+	/**
+	 * 레벨 시작 후 경과 시간을 화면 상단 중앙에 표시합니다.
+	 *
+	 * @param screen 화면 객체입니다.
+	 * @param elapsedTime 경과 시간(초)입니다.
+	 */
+	public void drawTime(final Screen screen, final int elapsedTime) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		String timeString = elapsedTime + "S";
+
+		// 문자열의 너비를 계산하여 중앙에 위치시킵니다.
+		int xPosition = (screen.getWidth() - fontRegularMetrics.stringWidth(timeString)) / 2;
+		// Y 좌표는 원하는 위치로 설정합니다. 여기서는 상단 여백을 25로 설정했습니다.
+		int yPosition = 25;
+
+		backBufferGraphics.drawString(timeString, xPosition, yPosition);
+	}
 }
