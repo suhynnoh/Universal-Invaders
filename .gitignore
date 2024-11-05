@@ -169,7 +169,6 @@ pip-log.txt
 # My custom
 *.iml
 .idea
-.gitmessage.txt
 out
 
 # Default
