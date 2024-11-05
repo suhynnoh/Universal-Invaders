@@ -9,6 +9,7 @@ import engine.Core;
 import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 import engine.GameSettings;
+import java.util.logging.Logger;
 
 public class EnemyShipSet {
 
@@ -30,8 +31,12 @@ public class EnemyShipSet {
     private int X_speed = 1;
     // 적 함선의 Y 방향 속도
     private int Y_speed = 1;
-
-
+    // 적 함선 끼리의 최소 거리
+    private final int MIN_DISTANCE = 5;
+    // 로그 출력기
+    private Logger logger;
+    // 적 수 카운터
+    private int enemyCounter;
 
     /**
      * 생성자 - 기본 set 초기화 및 스폰 준비
@@ -43,6 +48,8 @@ public class EnemyShipSet {
         this.random = new Random();
         this.ship = ship;
         this.movementSpeed = gameSettings.getBaseSpeed();
+        this.logger = Core.getLogger();
+        this.enemyCounter = 0;
     }
 
     /**
@@ -53,21 +60,32 @@ public class EnemyShipSet {
         if (this.spawnCooldown.checkFinished()) {
             this.spawnCooldown.reset();
             spawnEnemy();
-
+            enemyCounter++;
+            this.logger.info(enemyCounter + " Enemy Created!");
         }
 
-        int movement_X = 0;
-        int movement_Y = 0;
+        double movement_X;
+        double movement_Y;
+        int deltaX;
+        int deltaY;
+        double distance;
 
         // 각 적 객체에 대해 업데이트
         for (EnemyShip enemy : enemies) {
+            // 각 축방향 이동량 0으로 초기화
             enemy.update();
-            // 적이 플레이어를 따라가도록 설정
-            movement_X = (ship.getPositionX() > enemy.getPositionX()) ? X_speed : -X_speed;
-            movement_Y = (ship.getPositionY() > enemy.getPositionY()) ? Y_speed : -Y_speed;
-
-            enemy.move(movement_X, movement_Y);
-
+            // X거리와 Y거리 측정
+            deltaX = ship.getPositionX() - enemy.getPositionX();
+            deltaY = ship.getPositionY() - enemy.getPositionY();
+            //플레이어와의 거리 계산
+            distance = Math.hypot(deltaX, deltaY);
+            // 거리가 0이 아닐때만 플레이어를 향해 이동
+            if (distance != 0.0) {
+                // X축과 Y축의 거리에 따른 비율을 이용하여 이동량 설정
+                movement_X = X_speed * (deltaX / distance);
+                movement_Y = Y_speed * (deltaY / distance);
+                enemy.move(movement_X, movement_Y);
+            }
         }
     }
 
@@ -77,7 +95,7 @@ public class EnemyShipSet {
      */
     private void spawnEnemy() {
         int spawnX, spawnY;
-        int minDistance = 100; // 플레이어와의 최소 거리 우선 100으로 설정
+        int minDistance = 350; // 플레이어와의 최소 거리 우선 100으로 설정
 
         // 플레이어로부터 일정 거리 떨어진 위치에서만 생성되도록 설정
         do {
@@ -115,4 +133,8 @@ public class EnemyShipSet {
             }
         }
     }
+
+    //현재 화면 상에 생성되어 있는 적의 수를 반환합니다.
+    public int getEnemyCount() { return enemies.size(); }
+
 }

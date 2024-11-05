@@ -113,7 +113,7 @@ public class GameScreen extends Screen {
 	public final void initialize() {
 		super.initialize();
 
-		this.ship = new Ship(this.width / 2, this.height - 30);
+		this.ship = new Ship(this.width / 2, this.height / 2);
 		enemyShipSet = new EnemyShipSet(this.gameSettings, this.ship);
 		enemyShipSet.attach(this);
 
@@ -203,24 +203,24 @@ public class GameScreen extends Screen {
 						this.bulletsShot++;
 			}
 
-			if (this.enemyShipSpecial != null) {
-				if (!this.enemyShipSpecial.isDestroyed())
-					this.enemyShipSpecial.move(2, 0);
-				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
-					this.enemyShipSpecial = null;
+			//if (this.enemyShipSpecial != null) {
+			//	if (!this.enemyShipSpecial.isDestroyed())
+			//		this.enemyShipSpecial.move(2, 0);
+				//else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
+				//	this.enemyShipSpecial = null;
 
-			}
-			if (this.enemyShipSpecial == null
-					&& this.enemyShipSpecialCooldown.checkFinished()) {
-				this.enemyShipSpecial = new EnemyShip();
-				this.enemyShipSpecialCooldown.reset();
-				this.logger.info("A special ship appears");
-			}
-			if (this.enemyShipSpecial != null
-					&& this.enemyShipSpecial.getPositionX() > this.width) {
-				this.enemyShipSpecial = null;
-				this.logger.info("The special ship has escaped");
-			}
+			//}
+			//if (this.enemyShipSpecial == null
+			//		&& this.enemyShipSpecialCooldown.checkFinished()) {
+			//	this.enemyShipSpecial = new EnemyShip();
+			//	this.enemyShipSpecialCooldown.reset();
+			//	this.logger.info("A special ship appears");
+		//	}
+		//	if (this.enemyShipSpecial != null
+			//		&& this.enemyShipSpecial.getPositionX() > this.width) {
+			//	this.enemyShipSpecial = null;
+		//		this.logger.info("The special ship has escaped");
+			//}
 
 			this.ship.update();
             this.enemyShipSet.update();
