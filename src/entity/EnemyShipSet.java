@@ -24,6 +24,14 @@ public class EnemyShipSet {
     private Random random;
     // 아군 함선 참조를 위한 변수
     private Ship ship;
+    // 적 함선의 이동속도
+    private int movementSpeed;
+    // 적 함선의 X 방향 속도
+    private int X_speed = 4;
+    // 적 함선의 Y 방향 속도
+    private int Y_speed = 4;
+
+
 
     /**
      * 생성자 - 기본 set 초기화 및 스폰 준비
@@ -34,5 +42,52 @@ public class EnemyShipSet {
         this.drawManager = Core.getDrawManager();
         this.random = new Random();
         this.ship = ship;
+        this.movementSpeed = gameSettings.getBaseSpeed();
     }
+
+    /**
+     * 화면에 적 생성 후 이동하는 것 업데이트
+     */
+    public void update() {
+        // 스폰 쿨타임이 다 돌았으면 생성
+        if (this.spawnCooldown.checkFinished()) {
+            this.spawnCooldown.reset();
+            spawnEnemy();
+        }
+
+        // 각 적 객체에 대해 업데이트
+        for (EnemyShip enemy : enemies) {
+            enemy.update();
+        }
+    }
+
+
+    /**
+     * 적을 생성해주는 메소드
+     */
+    private void spawnEnemy() {
+        int spawnX, spawnY;
+        int minDistance = 100; // 플레이어와의 최소 거리 우선 100으로 설정
+
+        // 플레이어로부터 일정 거리 떨어진 위치에서만 생성되도록 설정
+        do {
+            spawnX = random.nextInt(screen.getWidth());
+            spawnY = random.nextInt(screen.getHeight());
+        } while (Math.hypot(spawnX - ship.getPositionX(), spawnY - ship.getPositionY()) < minDistance);
+
+        // 적 생성
+        EnemyShip newEnemy = new EnemyShip(spawnX, spawnY, SpriteType.EnemyShipA1);
+        // 생성된 적 객체를 Set에 추가
+        enemies.add(newEnemy);
+    }
+
+    /**
+     * 생성된 적들을 draw하는 메소드
+     */
+    public void draw() {
+        for (EnemyShip enemy : enemies) {
+            drawManager.drawEntity(enemy, enemy.positionX, enemy.positionY);
+        }
+    }
+
 }
