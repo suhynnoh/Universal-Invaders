@@ -27,9 +27,9 @@ public class EnemyShipSet {
     // 적 함선의 이동속도
     private int movementSpeed;
     // 적 함선의 X 방향 속도
-    private int X_speed = 4;
+    private int X_speed = 1;
     // 적 함선의 Y 방향 속도
-    private int Y_speed = 4;
+    private int Y_speed = 1;
 
 
 
@@ -53,11 +53,21 @@ public class EnemyShipSet {
         if (this.spawnCooldown.checkFinished()) {
             this.spawnCooldown.reset();
             spawnEnemy();
+
         }
+
+        int movement_X = 0;
+        int movement_Y = 0;
 
         // 각 적 객체에 대해 업데이트
         for (EnemyShip enemy : enemies) {
             enemy.update();
+            // 적이 플레이어를 따라가도록 설정
+            movement_X = (ship.getPositionX() > enemy.getPositionX()) ? X_speed : -X_speed;
+            movement_Y = (ship.getPositionY() > enemy.getPositionY()) ? Y_speed : -Y_speed;
+
+            enemy.move(movement_X, movement_Y);
+
         }
     }
 
@@ -90,4 +100,19 @@ public class EnemyShipSet {
         }
     }
 
+    public final void attach(final Screen newscreen) {
+        screen = newscreen;
+    }
+
+    public Set<EnemyShip> getEnemies() {
+        return enemies;
+    }
+
+    public void destroy(EnemyShip enemyShip) {
+        for (EnemyShip enemy : enemies) {
+            if (enemy.equals(enemyShip)) {
+                enemy.destroy();
+            }
+        }
+    }
 }
