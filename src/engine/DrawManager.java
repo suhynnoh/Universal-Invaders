@@ -573,7 +573,7 @@ public final class DrawManager {
 	public void drawTime(final Screen screen, final int elapsedTime) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		String timeString = elapsedTime + "S";
+		String timeString = elapsedTime + " S";
 
 		// 문자열의 너비를 계산하여 중앙에 위치시킵니다.
 		int xPosition = (screen.getWidth() - fontRegularMetrics.stringWidth(timeString)) / 2;
